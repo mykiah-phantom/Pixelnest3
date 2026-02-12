@@ -7,130 +7,38 @@
 <link rel="icon" href="PixelNesticon.png">
 
 <style>
-body {
-    background: linear-gradient(135deg, #2c3e50, #4ca1af);
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-}
-
-.card-container {
-    position: relative;
-    width: 340px;
-    height: 480px;
-    perspective: 1200px;
-}
-
-.card {
-    width: 340px;
-    height: 480px;
-    background: linear-gradient(to bottom, #0f0f0f, #505050);
-    border-radius: 18px;
-    padding: 14px;
-    box-shadow: 0 24px 60px rgba(0,0,0,0.45);
-    position: absolute;
-    transition: transform 0.52s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.45s ease;
-    cursor: pointer;
-    opacity: 0;
-    transform: translateX(420px) rotateY(40deg) scale(0.82);
-    pointer-events: none;
-    overflow: hidden;
-    color: #111;
-}
-
-.card.active {
-    opacity: 1;
-    transform: translateX(0) rotateY(0) scale(1);
-    pointer-events: auto;
-    z-index: 50;
-}
-
-.card.next {
-    opacity: 0.55;
-    transform: translateX(-36px) rotateY(-14deg) scale(0.96);
-    z-index: 40;
-    pointer-events: none;
-}
-
-.card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: 700;
-    font-size: 18px;
-    background: rgba(255,255,255,0.9);
-    padding: 8px 10px;
-    border-radius: 10px;
-}
-
-.image-container {
-    background: rgba(255,255,255,0.95);
-    border-radius: 12px;
-    padding: 8px;
-    margin: 12px 0;
-    text-align: center;
-    height: 260px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.image-container img {
-    max-width: 100%;
-    max-height: 100%;
-    border-radius: 8px;
-}
-
-.image-placeholder {
-    font-size: 60px;
-}
-
-.description {
-    background: rgba(255,255,255,0.88);
-    padding: 8px;
-    border-radius: 8px;
-    margin-top: 8px;
-    font-size: 13px;
-    height: 72px;
-    overflow: auto;
-}
-
-.controls {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 2.4em;
-    color: white;
-    cursor: pointer;
-    user-select: none;
-    transition: opacity 0.2s ease;
-}
-
-.controls:hover { opacity: 0.8; }
-
-.left-arrow { left: -88px; }
-.right-arrow { right: -88px; }
-
-.info-text {
-    position: absolute;
-    bottom: -62px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: white;
-    font-size: 12px;
-    white-space: nowrap;
-    opacity: 0.8;
-}
-
+:root{--bg1:#0f1720;--bg2:#14384a;--card-bg:rgba(255,255,255,0.06);--glass:rgba(255,255,255,0.06);--accent:#6ee7b7;--muted:rgba(255,255,255,0.75)}
+body{background:radial-gradient(1200px 600px at 10% 10%, rgba(110,231,183,0.06), transparent),linear-gradient(135deg,var(--bg1),var(--bg2));height:100vh;display:flex;justify-content:center;align-items:center;font-family:Inter, system-ui, -apple-system, Arial, sans-serif;margin:0;padding:0;color:var(--muted)}
+.card-container{position:relative;width:360px;height:520px;perspective:1400px}
+.card{width:360px;height:520px;background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));border-radius:18px;padding:14px;box-shadow:0 18px 40px rgba(2,6,23,0.6);position:absolute;transition:transform 0.52s cubic-bezier(.2,1,.36,1),opacity .45s ease,box-shadow .28s;cursor:pointer;opacity:0;transform:translateX(420px) rotateY(18deg) scale(.94);pointer-events:none;overflow:hidden;color:#fff;backdrop-filter: blur(6px)}
+.card::after{content:'';position:absolute;inset:0;border-radius:18px;padding:1px;background:linear-gradient(90deg, rgba(255,255,255,0.02), transparent);pointer-events:none}
+.card.active{opacity:1;transform:translateX(0) rotateY(0) scale(1);pointer-events:auto;z-index:50}
+.card.next{opacity:.6;transform:translateX(-36px) rotateY(-12deg) scale(.98);z-index:40;pointer-events:none}
+.card-header{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:16px;background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));padding:10px;border-radius:10px}
+.meta-sub{font-size:12px;opacity:.85;color:#cfeee0}
+.image-container{position:relative;background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));border-radius:12px;padding:8px;margin:14px 0;height:300px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.image-container img{max-width:100%;max-height:100%;border-radius:8px;display:block;transform:scale(1);transition:transform .36s ease}
+.image-container .play-btn{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:72px;height:72px;border-radius:50%;background:linear-gradient(180deg,var(--accent),#3ddaa6);display:flex;align-items:center;justify-content:center;color:#042018;font-size:28px;box-shadow:0 8px 30px rgba(30,120,90,0.18);opacity:0;transition:opacity .22s ease,transform .22s ease}
+.image-container:hover img{transform:scale(1.04)}
+.image-container:hover .play-btn{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.image-placeholder{font-size:60px}
+.description{background:transparent;padding:8px;border-radius:8px;margin-top:8px;font-size:13px;height:64px;overflow:hidden;color:#dff7ee}
+.card-footer{display:flex;gap:8px;justify-content:space-between;align-items:center;margin-top:10px}
+.btn{background:rgba(255,255,255,0.06);border-radius:8px;padding:8px 12px;color:inherit;border:1px solid rgba(255,255,255,0.04);cursor:pointer;transition:background .18s ease,transform .12s ease}
+.btn.play{background:linear-gradient(90deg,var(--accent),#3ddaa6);color:#042018;font-weight:700}
+.btn:active{transform:translateY(1px)}
+.controls{position:absolute;top:50%;transform:translateY(-50%);font-size:2.2em;color:rgba(255,255,255,0.9);cursor:pointer;user-select:none;transition:opacity .2s ease}
+.controls:hover{opacity:.9}
+.left-arrow{left:-86px}
+.right-arrow{right:-86px}
+.info-text{position:absolute;bottom:-64px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.88);font-size:12px;white-space:nowrap;opacity:.9}
+/* Entrance animation */
+@keyframes popIn{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.card.animate{animation:popIn .42s cubic-bezier(.2,.9,.3,1)}
+/* highlight search */
+mark{background:linear-gradient(90deg,#ffd089, #ffe7a8);color:#1b1b1b;padding:0 4px;border-radius:4px}
 /* responsive */
-@media (max-width: 480px) {
-    .card-container { width: 300px; height: 430px; }
-    .card { width: 300px; height: 430px; }
-}
+@media (max-width:520px){.card-container{width:320px;height:480px}.card{width:320px;height:480px}.left-arrow{left:-66px}.right-arrow{right:-66px}}
 </style>
 </head>
 <body>
@@ -139,7 +47,7 @@ body {
     <div style="position:absolute;top:-70px;left:0;right:0;display:flex;justify-content:center">
         <input id="searchInput" type="search" placeholder="Search games..." style="width:320px;padding:8px 12px;border-radius:8px;border:0;box-shadow:0 8px 20px rgba(0,0,0,0.25);font-size:14px;" />
     </div>
-    <div id="cards"></div>
+    <div id="cards" role="list"></div>
 
     <div class="controls left-arrow" id="prevBtn">❮</div>
     <div class="controls right-arrow" id="nextBtn">❯</div>
@@ -147,7 +55,7 @@ body {
 </div>
 
 <script>
-// Minimal dynamic renderer: fetch games_list.json and render stacked cards.
+// Enhanced dynamic renderer: upgraded card GUI (10 improvements)
 (async function(){
     const cardsContainer = document.getElementById('cards');
     const searchInput = document.getElementById('searchInput');
@@ -157,149 +65,83 @@ body {
     let filteredList = [];
     let currentIndex = 0;
 
-    function escapeHtml(str) {
-        return String(str || '')
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;');
-    }
+    function escapeHtml(str){return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
 
-    function createCard(game, index) {
+    function highlight(text, q){ if(!q) return escapeHtml(text); const idx = text.toLowerCase().indexOf(q); if(idx===-1) return escapeHtml(text); return escapeHtml(text.slice(0,idx)) + '<mark>'+escapeHtml(text.slice(idx, idx+q.length))+'</mark>' + escapeHtml(text.slice(idx+q.length)); }
+
+    // lazy loader for thumbnails
+    const io = ('IntersectionObserver' in window) ? new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{ if(e.isIntersecting){ const img = e.target; const src = img.dataset.src; if(src){ img.src = src; img.removeAttribute('data-src'); } io.unobserve(img); } });
+    }, {rootMargin:'200px'}) : null;
+
+    function createCard(game,index){
         const card = document.createElement('div');
-        card.className = 'card';
+        card.className = 'card animate';
         card.dataset.index = index;
-        if (index === currentIndex) card.classList.add('active');
-        else if (index === (currentIndex + 1) % filteredList.length) card.classList.add('next');
+        card.setAttribute('role','listitem');
+        if(index===currentIndex) card.classList.add('active');
+        else if(index === (currentIndex+1)%filteredList.length) card.classList.add('next');
         card.dataset.url = game.url;
 
-        const header = document.createElement('div');
-        header.className = 'card-header';
-        header.innerHTML = `<span>${escapeHtml(game.name)}</span><span></span>`;
+        const header = document.createElement('div'); header.className='card-header';
+        header.innerHTML = `<div><div>${highlight(game.name, searchInput.value.trim().toLowerCase())}</div><div class="meta-sub">${escapeHtml(game.description||'')}</div></div><div style="opacity:.7;font-size:12px">${escapeHtml(game.source||'Web')}</div>`;
 
-        const imgWrap = document.createElement('div');
-        imgWrap.className = 'image-container';
-        if (game.thumb) {
-            const img = document.createElement('img');
-            img.src = game.thumb;
-            img.alt = game.name;
+        const imgWrap = document.createElement('div'); imgWrap.className='image-container';
+        if(game.thumb){
+            const img = document.createElement('img'); img.alt = game.name; img.className='thumb';
+            img.dataset.src = game.thumb; img.loading='lazy';
+            if(io) io.observe(img); else img.src = game.thumb;
             imgWrap.appendChild(img);
-        } else {
-            const ph = document.createElement('div');
-            ph.className = 'image-placeholder';
-            ph.textContent = '🎮';
-            imgWrap.appendChild(ph);
-        }
+            const play = document.createElement('div'); play.className='play-btn'; play.innerHTML='▶'; play.title='Play';
+            play.addEventListener('click',(e)=>{ e.stopPropagation(); window.open(game.url,'_blank','width=1100,height=800'); });
+            imgWrap.appendChild(play);
+        } else { const ph = document.createElement('div'); ph.className='image-placeholder'; ph.textContent='🎮'; imgWrap.appendChild(ph); }
 
-        const desc = document.createElement('div');
-        desc.className = 'description';
-        desc.innerHTML = `<strong>${escapeHtml(game.name)}</strong><br>${escapeHtml(game.name)}`;
+        const desc = document.createElement('div'); desc.className='description'; desc.innerHTML = `<strong>${escapeHtml(game.name)}</strong><div style="opacity:.9">${escapeHtml(game.description||game.name)}</div>`;
 
-        card.appendChild(header);
-        card.appendChild(imgWrap);
-        card.appendChild(desc);
+        const footer = document.createElement('div'); footer.className='card-footer';
+        const playBtn = document.createElement('button'); playBtn.className='btn play'; playBtn.textContent='Play';
+        playBtn.addEventListener('click', (e)=>{ e.stopPropagation(); window.open(game.url,'_blank','width=1100,height=800'); });
+        const infoBtn = document.createElement('button'); infoBtn.className='btn'; infoBtn.textContent='Info';
+        infoBtn.addEventListener('click', (e)=>{ e.stopPropagation(); alert(game.description || game.name); });
+        footer.appendChild(playBtn); footer.appendChild(infoBtn);
 
-        card.addEventListener('click', (e) => {
-            const idx = Number(card.dataset.index);
-            if (idx !== currentIndex) {
-                currentIndex = idx;
-                updateCards();
-                e.stopPropagation();
-            } else {
-                // open in new window
-                window.open(game.url, '_blank', 'width=1100,height=800');
-            }
+        card.appendChild(header); card.appendChild(imgWrap); card.appendChild(desc); card.appendChild(footer);
+
+        // hover tilt effect
+        card.addEventListener('mousemove',(ev)=>{
+            const r = card.getBoundingClientRect(); const cx = r.left + r.width/2; const cy = r.top + r.height/2; const dx = (ev.clientX - cx)/r.width; const dy = (ev.clientY - cy)/r.height; card.style.transform = `translateX(0) rotateY(${dx*6}deg) rotateX(${ -dy*6 }deg) scale(1.01)`; card.style.boxShadow = `0 28px 60px rgba(2,15,30,0.55)`;
         });
+        card.addEventListener('mouseleave',()=>{ card.style.transform=''; card.style.boxShadow=''; updateCards(); });
+
+        card.addEventListener('click',(e)=>{ const idx = Number(card.dataset.index); if(idx !== currentIndex){ currentIndex = idx; updateCards(); e.stopPropagation(); } else { window.open(game.url,'_blank','width=1100,height=800'); } });
 
         return card;
     }
 
-    function renderCards() {
-        cardsContainer.innerHTML = '';
-        const fragment = document.createDocumentFragment();
-        filteredList.forEach((g, i) => fragment.appendChild(createCard(g,i)));
-        cardsContainer.appendChild(fragment);
-        updateCards();
-    }
+    function renderCards(){ cardsContainer.innerHTML=''; const frag = document.createDocumentFragment(); filteredList.forEach((g,i)=>frag.appendChild(createCard(g,i))); cardsContainer.appendChild(frag); updateCards(); }
 
-    function updateCards() {
-        const cards = Array.from(document.querySelectorAll('.card'));
-        cards.forEach((card, index) => {
-            card.classList.remove('active','next');
-            if (index === currentIndex) card.classList.add('active');
-            else if (index === (currentIndex + 1) % cards.length) card.classList.add('next');
-        });
-    }
+    function updateCards(){ const cards = Array.from(cardsContainer.querySelectorAll('.card')); cards.forEach((card,index)=>{ card.classList.remove('active','next'); if(index===currentIndex) card.classList.add('active'); else if(index === (currentIndex+1)%cards.length) card.classList.add('next'); }); }
 
-    function nextCard(){
-        currentIndex = (currentIndex + 1) % filteredList.length;
-        updateCards();
-    }
-    function prevCard(){
-        currentIndex = (currentIndex - 1 + filteredList.length) % filteredList.length;
-        updateCards();
-    }
+    function nextCard(){ currentIndex = (currentIndex+1) % filteredList.length; updateCards(); }
+    function prevCard(){ currentIndex = (currentIndex-1+filteredList.length) % filteredList.length; updateCards(); }
 
-    nextBtn.addEventListener('click', nextCard);
-    prevBtn.addEventListener('click', prevCard);
+    nextBtn.addEventListener('click', nextCard); prevBtn.addEventListener('click', prevCard);
+    document.addEventListener('keydown', (e)=>{ if(e.key==='ArrowRight'||e.key==='d'||e.key==='D') nextCard(); if(e.key==='ArrowLeft'||e.key==='a'||e.key==='A') prevCard(); if(e.key==='Enter'){ const active = filteredList[currentIndex]; if(active) window.open(active.url,'_blank','width=1100,height=800'); } });
 
-    document.addEventListener('keydown', (e)=>{
-        if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') nextCard();
-        if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') prevCard();
-    });
+    // Fetch games list (fallback if missing)
+    try{ const res = await fetch('/games_list.json'); if(!res.ok) throw new Error('games_list.json not found'); gamesList = await res.json(); }catch(err){ console.warn('Could not load games_list.json, using fallback. Error:', err); gamesList = [{ name:'Death Run', url:'/deathrun/index.html', thumb:'/deathrun/img/death.png', description:'A fast-paced obstacle run built with Unity WebGL.' }]; }
 
-    // Fetch games list (falls back to embedded short list if fetch fails)
-    try {
-        const res = await fetch('/games_list.json');
-        if (!res.ok) throw new Error('games_list.json not found');
-        gamesList = await res.json();
-    } catch (err) {
-        console.warn('Could not load games_list.json, using fallback. Error:', err);
-        gamesList = [
-            { name: '10 minutes till dawn', url: '/HTML-Games/10-minutes-till-dawn/index.html', thumb: '/HTML-Games/10-minutes-till-dawn/splash.png' },
-            { name: 'cluster rush', url: '/HTML-Games/cluster-rush/index.html', thumb: '/HTML-Games/cluster-rush/splash.png' },
-            { name: 'snake', url: '/HTML-Games/snake/index.html', thumb: null }
-        ];
-    }
+    if(!Array.isArray(gamesList) || gamesList.length===0){ cardsContainer.innerHTML = '<div style="color:white">No games found.</div>'; return; }
 
-    if (!Array.isArray(gamesList) || gamesList.length === 0) {
-        cardsContainer.innerHTML = '<div style="color:white">No games found.</div>';
-        return;
-    }
+    filteredList = gamesList.slice(); renderCards();
 
-    // initialize filtered list and wire search
-    filteredList = gamesList.slice();
-    renderCards();
+    function applySearch(query){ const q = String(query||'').trim().toLowerCase(); if(!q){ filteredList = gamesList.slice(); } else { filteredList = gamesList.filter(g => (g.name||'').toLowerCase().includes(q) || (g.description||'').toLowerCase().includes(q)); }
+        currentIndex = 0; if(filteredList.length===0){ cardsContainer.innerHTML = '<div style="color:white">No games match your search.</div>'; return; } renderCards(); }
 
-    function applySearch(query) {
-        const q = String(query || '').trim().toLowerCase();
-        if (!q) {
-            filteredList = gamesList.slice();
-        } else {
-            filteredList = gamesList.filter(g => (g.name || '').toLowerCase().includes(q));
-        }
-        currentIndex = 0;
-        if (filteredList.length === 0) {
-            cardsContainer.innerHTML = '<div style="color:white">No games match your search.</div>';
-            return;
-        }
-        renderCards();
-    }
+    let searchTimer = null; searchInput.addEventListener('input', (e)=>{ clearTimeout(searchTimer); searchTimer = setTimeout(()=> applySearch(e.target.value), 140); });
+    searchInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ if(filteredList.length===1) window.open(filteredList[0].url,'_blank','width=1100,height=800'); else updateCards(); } if(e.key==='Escape'){ searchInput.value=''; applySearch(''); } });
 
-    let searchTimer = null;
-    searchInput.addEventListener('input', (e) => {
-        clearTimeout(searchTimer);
-        searchTimer = setTimeout(()=> applySearch(e.target.value), 120);
-    });
-    searchInput.addEventListener('keydown', (e)=>{
-        if (e.key === 'Enter') {
-            // if one result, open it; otherwise focus active
-            if (filteredList.length === 1) window.open(filteredList[0].url, '_blank', 'width=1100,height=800');
-            else updateCards();
-        }
-        if (e.key === 'Escape') { searchInput.value = ''; applySearch(''); }
-    });
 })();
 </script>
 
