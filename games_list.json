@@ -1,0 +1,8 @@
+[
+  {
+    "name": "Death Run",
+    "url": "/deathrun/index.html",
+    "thumb": "/deathrun/img/death.png",
+    "description": "A fast-paced obstacle run built with Unity WebGL."
+  }
+]
