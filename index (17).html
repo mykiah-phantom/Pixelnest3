@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PixelNest Games</title>
+<link rel="icon" href="PixelNesticon.png">
+
+<style>
+body {
+    background: linear-gradient(135deg, #2c3e50, #4ca1af);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.card-container {
+    position: relative;
+    width: 340px;
+    height: 480px;
+    perspective: 1200px;
+}
+
+.card {
+    width: 340px;
+    height: 480px;
+    background: linear-gradient(to bottom, #0f0f0f, #505050);
+    border-radius: 18px;
+    padding: 14px;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.45);
+    position: absolute;
+    transition: transform 0.52s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.45s ease;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateX(420px) rotateY(40deg) scale(0.82);
+    pointer-events: none;
+    overflow: hidden;
+    color: #111;
+}
+
+.card.active {
+    opacity: 1;
+    transform: translateX(0) rotateY(0) scale(1);
+    pointer-events: auto;
+    z-index: 50;
+}
+
+.card.next {
+    opacity: 0.55;
+    transform: translateX(-36px) rotateY(-14deg) scale(0.96);
+    z-index: 40;
+    pointer-events: none;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 700;
+    font-size: 18px;
+    background: rgba(255,255,255,0.9);
+    padding: 8px 10px;
+    border-radius: 10px;
+}
+
+.image-container {
+    background: rgba(255,255,255,0.95);
+    border-radius: 12px;
+    padding: 8px;
+    margin: 12px 0;
+    text-align: center;
+    height: 260px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-container img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 8px;
+}
+
+.image-placeholder {
+    font-size: 60px;
+}
+
+.description {
+    background: rgba(255,255,255,0.88);
+    padding: 8px;
+    border-radius: 8px;
+    margin-top: 8px;
+    font-size: 13px;
+    height: 72px;
+    overflow: auto;
+}
+
+.controls {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2.4em;
+    color: white;
+    cursor: pointer;
+    user-select: none;
+    transition: opacity 0.2s ease;
+}
+
+.controls:hover { opacity: 0.8; }
+
+.left-arrow { left: -88px; }
+.right-arrow { right: -88px; }
+
+.info-text {
+    position: absolute;
+    bottom: -62px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0.8;
+}
+
+/* responsive */
+@media (max-width: 480px) {
+    .card-container { width: 300px; height: 430px; }
+    .card { width: 300px; height: 430px; }
+}
+</style>
+</head>
+<body>
+
+<div class="card-container" id="launcher">
+    <div style="position:absolute;top:-70px;left:0;right:0;display:flex;justify-content:center">
+        <input id="searchInput" type="search" placeholder="Search games..." style="width:320px;padding:8px 12px;border-radius:8px;border:0;box-shadow:0 8px 20px rgba(0,0,0,0.25);font-size:14px;" />
+    </div>
+    <div id="cards"></div>
+
+    <div class="controls left-arrow" id="prevBtn">❮</div>
+    <div class="controls right-arrow" id="nextBtn">❯</div>
+    <div class="info-text">← → or A/D to switch · Click active card to open</div>
+</div>
+
+<script>
+// Minimal dynamic renderer: fetch games_list.json and render stacked cards.
+(async function(){
+    const cardsContainer = document.getElementById('cards');
+    const searchInput = document.getElementById('searchInput');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    let gamesList = [];
+    let filteredList = [];
+    let currentIndex = 0;
+
+    function escapeHtml(str) {
+        return String(str || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    function createCard(game, index) {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.dataset.index = index;
+        if (index === currentIndex) card.classList.add('active');
+        else if (index === (currentIndex + 1) % filteredList.length) card.classList.add('next');
+        card.dataset.url = game.url;
+
+        const header = document.createElement('div');
+        header.className = 'card-header';
+        header.innerHTML = `<span>${escapeHtml(game.name)}</span><span></span>`;
+
+        const imgWrap = document.createElement('div');
+        imgWrap.className = 'image-container';
+        if (game.thumb) {
+            const img = document.createElement('img');
+            img.src = game.thumb;
+            img.alt = game.name;
+            imgWrap.appendChild(img);
+        } else {
+            const ph = document.createElement('div');
+            ph.className = 'image-placeholder';
+            ph.textContent = '🎮';
+            imgWrap.appendChild(ph);
+        }
+
+        const desc = document.createElement('div');
+        desc.className = 'description';
+        desc.innerHTML = `<strong>${escapeHtml(game.name)}</strong><br>${escapeHtml(game.name)}`;
+
+        card.appendChild(header);
+        card.appendChild(imgWrap);
+        card.appendChild(desc);
+
+        card.addEventListener('click', (e) => {
+            const idx = Number(card.dataset.index);
+            if (idx !== currentIndex) {
+                currentIndex = idx;
+                updateCards();
+                e.stopPropagation();
+            } else {
+                // open in new window
+                window.open(game.url, '_blank', 'width=1100,height=800');
+            }
+        });
+
+        return card;
+    }
+
+    function renderCards() {
+        cardsContainer.innerHTML = '';
+        const fragment = document.createDocumentFragment();
+        filteredList.forEach((g, i) => fragment.appendChild(createCard(g,i)));
+        cardsContainer.appendChild(fragment);
+        updateCards();
+    }
+
+    function updateCards() {
+        const cards = Array.from(document.querySelectorAll('.card'));
+        cards.forEach((card, index) => {
+            card.classList.remove('active','next');
+            if (index === currentIndex) card.classList.add('active');
+            else if (index === (currentIndex + 1) % cards.length) card.classList.add('next');
+        });
+    }
+
+    function nextCard(){
+        currentIndex = (currentIndex + 1) % filteredList.length;
+        updateCards();
+    }
+    function prevCard(){
+        currentIndex = (currentIndex - 1 + filteredList.length) % filteredList.length;
+        updateCards();
+    }
+
+    nextBtn.addEventListener('click', nextCard);
+    prevBtn.addEventListener('click', prevCard);
+
+    document.addEventListener('keydown', (e)=>{
+        if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') nextCard();
+        if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') prevCard();
+    });
+
+    // Fetch games list (falls back to embedded short list if fetch fails)
+    try {
+        const res = await fetch('/games_list.json');
+        if (!res.ok) throw new Error('games_list.json not found');
+        gamesList = await res.json();
+    } catch (err) {
+        console.warn('Could not load games_list.json, using fallback. Error:', err);
+        gamesList = [
+            { name: '10 minutes till dawn', url: '/HTML-Games/10-minutes-till-dawn/index.html', thumb: '/HTML-Games/10-minutes-till-dawn/splash.png' },
+            { name: 'cluster rush', url: '/HTML-Games/cluster-rush/index.html', thumb: '/HTML-Games/cluster-rush/splash.png' },
+            { name: 'snake', url: '/HTML-Games/snake/index.html', thumb: null }
+        ];
+    }
+
+    if (!Array.isArray(gamesList) || gamesList.length === 0) {
+        cardsContainer.innerHTML = '<div style="color:white">No games found.</div>';
+        return;
+    }
+
+    // initialize filtered list and wire search
+    filteredList = gamesList.slice();
+    renderCards();
+
+    function applySearch(query) {
+        const q = String(query || '').trim().toLowerCase();
+        if (!q) {
+            filteredList = gamesList.slice();
+        } else {
+            filteredList = gamesList.filter(g => (g.name || '').toLowerCase().includes(q));
+        }
+        currentIndex = 0;
+        if (filteredList.length === 0) {
+            cardsContainer.innerHTML = '<div style="color:white">No games match your search.</div>';
+            return;
+        }
+        renderCards();
+    }
+
+    let searchTimer = null;
+    searchInput.addEventListener('input', (e) => {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(()=> applySearch(e.target.value), 120);
+    });
+    searchInput.addEventListener('keydown', (e)=>{
+        if (e.key === 'Enter') {
+            // if one result, open it; otherwise focus active
+            if (filteredList.length === 1) window.open(filteredList[0].url, '_blank', 'width=1100,height=800');
+            else updateCards();
+        }
+        if (e.key === 'Escape') { searchInput.value = ''; applySearch(''); }
+    });
+})();
+</script>
+
+</body>
+</html>
